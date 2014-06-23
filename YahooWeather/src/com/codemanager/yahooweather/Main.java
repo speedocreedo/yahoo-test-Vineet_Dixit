@@ -4,38 +4,43 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 public class Main extends Activity {
-	
-	//declare variables
+
+	// declare variables
 	ListView lv;
 	ArrayList<String> cities;
 	ArrayAdapter<String> adapter;
 	public final static String CITY_NAME = "";
-	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-		
+
 		// bootstrap routine
 		vinit();
-		
+
 		// add onClickListener method to the list view
-		lv.setOnItemClickListener(new OnItemClickListener(){
+		lv.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View view, int pos,
 					long id) {
-				Intent intent = new Intent(getApplicationContext(),CityInfo.class);
-				intent.putExtra(CITY_NAME, lv.getItemIdAtPosition(pos));
+				Intent intent = new Intent(getApplicationContext(),
+						CityInfo.class);
+				String s = lv.getItemAtPosition(pos).toString();
+				intent.putExtra(CITY_NAME, s);
 				startActivity(intent);
 			}
 		});
@@ -47,15 +52,15 @@ public class Main extends Activity {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
-	
-	public void vinit(){
-		//get the widget id's
-		lv = (ListView)findViewById(R.id.lvCities);
-		
-		//array list init
+
+	public void vinit() {
+		// get the widget id's
+		lv = (ListView) findViewById(R.id.lvCities);
+
+		// array list init
 		cities = new ArrayList<String>();
-		
-		//populate the array list with cities
+
+		// populate the array list with cities
 		cities.add("London");
 		cities.add("Berlin");
 		cities.add("NewYork");
@@ -70,10 +75,21 @@ public class Main extends Activity {
 		cities.add("Rome");
 		cities.add("Mexico City");
 		cities.add("Barcelona");
-		
+
 		// adapter init
-		adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,cities);
-		
+		adapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_list_item_1, cities) {
+			@Override
+			public View getView(int position, View convertView, ViewGroup parent) {
+				View view = super.getView(position, convertView, parent);
+				TextView textView = (TextView) view
+						.findViewById(android.R.id.text1);
+				/* YOUR CHOICE OF COLOR */
+				textView.setTextColor(Color.WHITE);
+				return view;
+			}
+		};
+
 		// plug the list view into the adapter
 		lv.setAdapter(adapter);
 	}
